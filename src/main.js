@@ -26,13 +26,6 @@ export async function createModule(options) {
   );
   options.sourcesDirectory = moduleDir;
 
-  // try {
-  //   await access(moduleDir, fs.constants.R_OK);
-  // } catch (err) {
-  //   console.error('%s Invalid module name', chalk.red.bold('ERROR'));
-  //   process.exit(1);
-  // }
-
   const tasks = [];
 
   tasks.push({
@@ -111,13 +104,6 @@ export async function createService(options) {
     '../_sources/services/SRV.php'
   );
   options.sourcesDirectory = serviceFile;
-
-  // try {
-  //   await access(serviceFile, fs.constants.R_OK);
-  // } catch (err) {
-  //   console.error('%s Invalid service name', chalk.red.bold('ERROR'));
-  //   process.exit(1);
-  // }
 
   const tasks = new Listr([
     {
