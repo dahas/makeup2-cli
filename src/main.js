@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import Listr from 'listr';
+import execa from 'execa';
 
 const access = promisify(fs.access);
 
@@ -133,16 +134,10 @@ export async function createService(options) {
 
 // Launch build in PHP webserver: --------------- //
 export async function launchWebserver() {
+  const sassDetected = detectSass();
   const port = 2400;
   const tasks = new Listr([
-    {
-      title: 'SASS watcher enabled',
-      task: () => {
-        const execa = require('execa');
-        execa('npm run scss') // Using node-sass watcher
-          .catch(err => console.log(err));
-      }
-    },
+    sassWatcher(sassDetected),
     {
       title: 'Webserver launched',
       task: () => {
@@ -155,7 +150,7 @@ export async function launchWebserver() {
     }
   ]);
 
-  await tasks.run();
+  await tasks.run().catch(e => null);
   console.log(`%s Webserver is running on http://localhost:${port} ...`, chalk.green.bold('OK'));
   return true;
 }
@@ -163,19 +158,17 @@ export async function launchWebserver() {
 
 // Launch SASS watcherr: --------------- //
 export async function launchSass() {
-  const tasks = new Listr([
-    {
-      title: 'SASS watcher enabled',
-      task: () => {
-        const execa = require('execa');
-        execa('npm run scss') // Using node-sass watcher
-          .catch(err => console.log(err));
-      }
-    }
-  ]);
+  const sassDetected = detectSass();
+  const tasks = new Listr([sassWatcher(sassDetected)]);
 
-  await tasks.run();
-  console.log(`%s Watching for changes in scss files ...`, chalk.green.bold('OK'));
+  await tasks.run()
+    .then(() => {
+      if (sassDetected) {
+        console.log(`%s Watching for changes in scss files ...`, chalk.green.bold('OK'))
+      }
+    })
+    .catch(() => null);
+
   return true;
 }
 
@@ -224,4 +217,33 @@ function writeFile(targetDirectory, data) {
       resolve('The file has been saved!');
     });
   });
+}
+
+function sassWatcher(sassDetected) {
+  if (sassDetected) {
+    return {
+      title: 'SASS watcher enabled',
+      task: () => {
+        execa('node-sass', ['-w', '-o'], ['public/sass/styles.scss', 'public/resources/css'])
+            .catch(() => null);
+      }
+    }
+  } else {
+    return {
+      title: 'SASS not found',
+      skip: () => {
+        return 'Please run: npm i -g node-sass';
+      },
+      task: () => { null }
+    }
+  }
+}
+
+function detectSass() {
+  try {
+    require('child_process').execSync('node-sass --version');
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
