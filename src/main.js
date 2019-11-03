@@ -1,11 +1,9 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
-import { promisify } from 'util';
 import Listr from 'listr';
-import execa from 'execa';
 
-const access = promisify(fs.access);
+const childProcess = require('child_process');
 
 
 // Create a module: ----------------------------- //
@@ -210,8 +208,7 @@ function sassWatcher(sassDetected) {
     return {
       title: 'SASS watcher enabled',
       task: () => {
-        execa('node-sass', ['-w', '-o'], ['public/sass/styles.scss', 'public/resources/css'])
-            .catch(() => null);
+        childProcess.exec('node-sass -w public/sass/styles.scss -o public/resources/css');
       }
     }
   } else {
@@ -227,7 +224,7 @@ function sassWatcher(sassDetected) {
 
 function detectSass() {
   try {
-    require('child_process').execSync('node-sass --version');
+    childProcess.execSync('node-sass --version');
     return true;
   } catch (e) {
     return false;
