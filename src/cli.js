@@ -20,7 +20,7 @@ export async function cli() {
       }
     }
   } catch (e) {
-    console.log(e)
+    // console.log(e)
     console.log('Error: Something went wrong!')
   }
 }
