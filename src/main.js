@@ -118,10 +118,10 @@ export async function createService(options) {
 
 // Launch build in PHP webserver: --------------- //
 export async function launchWebserver() {
-  const sassDetected = detectSass();
+  const sassDetected = _detectSass();
   const port = 2400;
   const tasks = new Listr([
-    sassWatcher(sassDetected),
+    _sassWatcher(sassDetected),
     {
       title: 'Webserver launched',
       task: () => {
@@ -135,20 +135,20 @@ export async function launchWebserver() {
   ]);
 
   await tasks.run().catch(e => null);
-  console.log(`%s Webserver is running on http://localhost:${port} ...`, chalk.green.bold('OK'));
+  console.log(chalk.green.bold('OK') + ` Webserver is running on http://localhost:${port} ...`);
   return true;
 }
 
 
-// Launch SASS watcherr: --------------- //
+// Launch SASS watcher: --------------- //
 export async function launchSass() {
-  const sassDetected = detectSass();
-  const tasks = new Listr([sassWatcher(sassDetected)]);
+  const sassDetected = _detectSass();
+  const tasks = new Listr([_sassWatcher(sassDetected)]);
 
   await tasks.run()
     .then(() => {
       if (sassDetected) {
-        console.log(`%s Watching for changes in scss files ...`, chalk.green.bold('OK'))
+        console.log(chalk.green.bold('OK') + ' Watching for changes in scss files ...');
       }
     })
     .catch(() => null);
@@ -161,9 +161,9 @@ export async function launchSass() {
 
 async function createFile(sourcesDirectory, targetDirectory, className, prot) {
   try {
-    await createPath(targetDirectory);
-    let data = await readFile(sourcesDirectory, className, prot);
-    return await writeFile(targetDirectory, data);
+    await _createPath(targetDirectory);
+    let data = await _readFile(sourcesDirectory, className, prot);
+    return await _writeFile(targetDirectory, data);
   } catch (e) {
     console.error('%s' + e, chalk.red.bold('ERROR'));
   }
@@ -172,7 +172,7 @@ async function createFile(sourcesDirectory, targetDirectory, className, prot) {
 
 // Helper: ------------------------------------------- //
 
-function createPath(targetDirectory) {
+function _createPath(targetDirectory) {
   let basepath = path.dirname(targetDirectory);
   return new Promise((resolve, reject) => {
     fs.mkdir(basepath, { recursive: true }, (err) => {
@@ -182,7 +182,7 @@ function createPath(targetDirectory) {
   });
 }
 
-function readFile(sourcesDirectory, className, prot) {
+function _readFile(sourcesDirectory, className, prot) {
   return new Promise((resolve, reject) => {
     fs.readFile(sourcesDirectory, 'utf8', (err, data) => {
       if (err) reject(err);
@@ -194,7 +194,7 @@ function readFile(sourcesDirectory, className, prot) {
   })
 }
 
-function writeFile(targetDirectory, data) {
+function _writeFile(targetDirectory, data) {
   return new Promise((resolve, reject) => {
     fs.writeFile(targetDirectory, data, (err) => {
       if (err) reject(err);
@@ -203,7 +203,7 @@ function writeFile(targetDirectory, data) {
   });
 }
 
-function sassWatcher(sassDetected) {
+function _sassWatcher(sassDetected) {
   if (sassDetected) {
     return {
       title: 'SASS watcher enabled',
@@ -222,7 +222,7 @@ function sassWatcher(sassDetected) {
   }
 }
 
-function detectSass() {
+function _detectSass() {
   try {
     childProcess.execSync('node-sass --version');
     return true;
