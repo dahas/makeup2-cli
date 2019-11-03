@@ -16,7 +16,7 @@ export async function createModule(options) {
     targetDirectory: path.join(
       options.targetDirectory || process.cwd(),
       '/makeup/modules',
-      options.module
+      options.module.toLowerCase()
     )
   };
 
@@ -26,17 +26,17 @@ export async function createModule(options) {
   );
   options.sourcesDirectory = moduleDir;
 
-  try {
-    await access(moduleDir, fs.constants.R_OK);
-  } catch (err) {
-    console.error('%s Invalid module name', chalk.red.bold('ERROR'));
-    process.exit(1);
-  }
+  // try {
+  //   await access(moduleDir, fs.constants.R_OK);
+  // } catch (err) {
+  //   console.error('%s Invalid module name', chalk.red.bold('ERROR'));
+  //   process.exit(1);
+  // }
 
   const tasks = [];
 
   tasks.push({
-    title: 'Create configuration file',
+    title: 'Configuration file created',
     task: () => {
       const filePath = path.resolve(
         options.sourcesDirectory,
@@ -46,15 +46,15 @@ export async function createModule(options) {
       const targetPath = path.join(
         options.targetDirectory || process.cwd(),
         'config',
-        options.module + '.ini'
+        options.module.toLowerCase() + '.ini'
       )
-      createFile(filePath, targetPath, options.module, options.modProt)
+      createFile(filePath, targetPath, options.module.toLowerCase(), options.modProt)
     }
   });
 
   if (options.modType === 'PAGE' || options.modType === 'CONTENT') {
     tasks.push({
-      title: 'Create controller',
+      title: 'Controller created',
       task: () => {
         const filePath = path.resolve(
           options.sourcesDirectory,
@@ -64,14 +64,14 @@ export async function createModule(options) {
         const targetPath = path.join(
           options.targetDirectory || process.cwd(),
           'controller',
-          options.module + '.php'
+          options.module.toLowerCase() + '.php'
         )
         createFile(filePath, targetPath, options.module)
       }
     });
 
     tasks.push({
-      title: 'Create template',
+      title: 'Template created',
       task: () => {
         const filePath = path.resolve(
           options.sourcesDirectory,
@@ -102,7 +102,7 @@ export async function createService(options) {
     targetDirectory: path.join(
       options.targetDirectory || process.cwd(),
       '/makeup/services',
-      options.service + '.php'
+      options.service.toLowerCase() + '.php'
     )
   };
 
@@ -112,16 +112,16 @@ export async function createService(options) {
   );
   options.sourcesDirectory = serviceFile;
 
-  try {
-    await access(serviceFile, fs.constants.R_OK);
-  } catch (err) {
-    console.error('%s Invalid service name', chalk.red.bold('ERROR'));
-    process.exit(1);
-  }
+  // try {
+  //   await access(serviceFile, fs.constants.R_OK);
+  // } catch (err) {
+  //   console.error('%s Invalid service name', chalk.red.bold('ERROR'));
+  //   process.exit(1);
+  // }
 
   const tasks = new Listr([
     {
-      title: 'Create file',
+      title: 'File created',
       task: () => createFile(options.sourcesDirectory, options.targetDirectory, options.service),
     }
   ]);

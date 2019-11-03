@@ -60,8 +60,10 @@ async function prompt(options) {
     questions.push({
       type: 'input',
       name: 'modName',
-      message: 'Please enter a name for the module:',
-      validate: (input) => input.length > 0
+      message: 'Please enter a valid name for the module:',
+      validate: (input) => {
+        return input.length > 0 && /^[a-zA-Z]+$/.test(input)
+      }
     });
     questions.push({
       type: 'list',
@@ -92,8 +94,10 @@ async function prompt(options) {
     questions.push({
       type: 'input',
       name: 'srvName',
-      message: 'Please enter a name for the service:',
-      validate: (input) => input.length > 0
+      message: 'Please enter a valid name for the service:',
+      validate: (input) => {
+        return input.length > 0 && /^[a-zA-Z]+$/.test(input)
+      }
     });
 
     const answers = await inquirer.prompt(questions);
