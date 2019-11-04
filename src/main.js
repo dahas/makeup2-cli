@@ -6,6 +6,14 @@ import Listr from 'listr';
 const childProcess = require('child_process');
 
 
+// Get the version
+export async function version() {
+  var pjson = require('../package.json');
+  console.log('makeUp cli v' + pjson.version);
+  return true;
+}
+
+
 // Create a module: ----------------------------- //
 export async function createModule(options) {
   // const components = ['config', 'controller', 'view'];

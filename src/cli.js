@@ -1,12 +1,14 @@
 import arg from 'arg';
 import inquirer from 'inquirer';
-import { createModule, createService, launchWebserver, launchSass } from './main';
+import { version, createModule, createService, launchWebserver, launchSass } from './main';
 
 
 export async function cli() {
   try {
     let options = applyArgs();
-    if (options && options.webserver) {
+    if (options && options.version) {
+      await version();
+    } else if (options && options.webserver) {
       await launchWebserver();
     } else if (options && options.sass) {
       await launchSass();
@@ -29,10 +31,12 @@ export async function cli() {
 function applyArgs() {
   const args = arg(
     {
+      '--version': Boolean,
       '--create-module': Boolean,
       '--create-service': Boolean,
       '--serve': Boolean,
       '--scss': Boolean,
+      '-v': '--version',
       '-m': '--create-module',
       '-s': '--create-service',
       '-p': '--serve',
@@ -44,6 +48,7 @@ function applyArgs() {
     }
   );
   return {
+    version: args['--version'],
     module: args['--create-module'],
     service: args['--create-service'],
     webserver: args['--serve'],
