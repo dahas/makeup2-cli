@@ -11,13 +11,13 @@ The CLI is part of the **makeUp** framework. It makes no sense using it without 
 The CLI must be installed globally:
 
 ```
-npm i -g makeup-cli
+$ npm i -g makeup-cli
 ```
 
-## Usage
+## Usage example
 
 ```
-makeup [--arg]
+$ makeup -v
 ```
 
 Find a list below with all available arguments.
