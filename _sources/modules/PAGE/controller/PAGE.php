@@ -9,7 +9,7 @@ use makeup\lib\Module;
 // use makeup\lib\Lang;
 
 
-class XXXX extends Module
+class CCCC extends Module
 {
     public function __construct()
     {

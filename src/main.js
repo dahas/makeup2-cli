@@ -84,13 +84,13 @@ export async function installFw() {
 
 // Create a module: ----------------------------- //
 export async function createModule(options) {
-  // const components = ['config', 'controller', 'view'];
+  let fileName = options.module.replace(/\.?([A-Z]+)/g, (x, y) => "_" + y.toLowerCase()).replace(/^_/, "");
   options = {
     ...options,
     targetDirectory: path.join(
       options.targetDirectory || process.cwd(),
       '/makeup/modules',
-      options.module.toLowerCase()
+      fileName
     )
   };
 
@@ -113,9 +113,9 @@ export async function createModule(options) {
       const targetPath = path.join(
         options.targetDirectory || process.cwd(),
         'config',
-        options.module.toLowerCase() + '.ini'
+        fileName + '.ini'
       )
-      createFile(filePath, targetPath, options.module.toLowerCase(), options.modProt)
+      createFile(filePath, targetPath, fileName, options.module, options.modProt)
     }
   });
 
@@ -131,9 +131,9 @@ export async function createModule(options) {
         const targetPath = path.join(
           options.targetDirectory || process.cwd(),
           'controller',
-          options.module.toLowerCase() + '.php'
+          fileName + '.php'
         )
-        createFile(filePath, targetPath, options.module)
+        createFile(filePath, targetPath, fileName, options.module)
       }
     });
 
@@ -148,9 +148,9 @@ export async function createModule(options) {
         const targetPath = path.join(
           options.targetDirectory || process.cwd(),
           'view',
-          options.module + '.html'
+          fileName + '.html'
         )
-        createFile(filePath, targetPath, options.module)
+        createFile(filePath, targetPath, fileName, options.module)
       }
     });
   }
@@ -235,10 +235,10 @@ export async function launchSass() {
 
 // Tasks: ------------------------------------------- //
 
-async function createFile(sourcesDirectory, targetDirectory, className, prot) {
+async function createFile(sourcesDirectory, targetDirectory, fileName, className, prot) {
   try {
     await _createPath(targetDirectory);
-    let data = await _readFile(sourcesDirectory, className, prot);
+    let data = await _readFile(sourcesDirectory, fileName, className, prot);
     return await _writeFile(targetDirectory, data);
   } catch (e) {
     console.error('%s' + e, chalk.red.bold('ERROR'));
@@ -258,12 +258,13 @@ function _createPath(targetDirectory) {
   });
 }
 
-function _readFile(sourcesDirectory, className, prot) {
+function _readFile(sourcesDirectory, fileName, className, prot) {
   return new Promise((resolve, reject) => {
     fs.readFile(sourcesDirectory, 'utf8', (err, data) => {
       if (err) reject(err);
       className = className.charAt(0).toUpperCase() + className.slice(1); // Uppercase first letter
-      data = data.replace(/XXXX/g, className);
+      data = data.replace(/CCCC/g, className);
+      data = data.replace(/FFFF/g, fileName);
       data = data.replace(/PPPP/g, prot ? '1' : '0')
       resolve(data);
     });
