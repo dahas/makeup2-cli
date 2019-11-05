@@ -20,7 +20,7 @@ export async function installFw() {
       title: 'Downloading framework ...',
       task: async (c, t) => {
         await new Promise((resolve, reject) => {
-          const ls = exec('git clone https://github.com/dahas/cookie_management.git assasasasasa');
+          const ls = exec('git clone https://github.com/dahas/makeup2.git .');
           ls.on('exit', (code) => {
             if (code == 0) { // OK
               resolve(`child process exited with code ${code}`);
