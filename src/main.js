@@ -5,7 +5,9 @@ import Listr from 'listr';
 import { exec, execSync } from 'child_process';
 
 
-// Get the version
+// OPTIONS: ///////////////////////////////////////////
+
+// Get the version: -------------------------------- //
 export async function version() {
   var pjson = require('../package.json');
   console.log('makeUp cli v' + pjson.version);
@@ -13,7 +15,7 @@ export async function version() {
 }
 
 
-// Install framework: --------------- //
+// Install framework: ------------------------------ //
 export async function installFw() {
   const tasks = new Listr([
     {
@@ -82,7 +84,7 @@ export async function installFw() {
 }
 
 
-// Create a module: ----------------------------- //
+// Create a module: -------------------------------- //
 export async function createModule(options) {
   let fileName = options.module.replace(/\.?([A-Z]+)/g, (x, y) => "_" + y.toLowerCase()).replace(/^_/, "");
   options = {
@@ -162,7 +164,7 @@ export async function createModule(options) {
 }
 
 
-// Create a service: ---------------------------- //
+// Create a service: ------------------------------- //
 export async function createService(options) {
   options = {
     ...options,
@@ -192,7 +194,7 @@ export async function createService(options) {
 }
 
 
-// Launch build in PHP webserver: --------------- //
+// Launch build in PHP webserver: ------------------ //
 export async function launchWebserver() {
   const sassDetected = _detectSass();
   const port = 2400;
@@ -216,7 +218,7 @@ export async function launchWebserver() {
 }
 
 
-// Launch SASS watcher: --------------- //
+// Launch SASS watcher: ---------------------------- //
 export async function launchSass() {
   const sassDetected = _detectSass();
   const tasks = new Listr([sassWatcher(sassDetected)]);
@@ -253,7 +255,7 @@ function sassWatcher(sassDetected) {
 }
 
 
-// Tasks: ------------------------------------------- //
+// Tasks: /////////////////////////////////////////////
 
 async function createFile(sourcesDirectory, targetDirectory, fileName, className, prot) {
   try {
@@ -266,7 +268,7 @@ async function createFile(sourcesDirectory, targetDirectory, fileName, className
 }
 
 
-// Helper: ------------------------------------------- //
+// Helper: /////////////////////////////////////////////
 
 function _createPath(targetDirectory) {
   let basepath = path.dirname(targetDirectory);
