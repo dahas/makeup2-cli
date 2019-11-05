@@ -2,14 +2,76 @@ import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import Listr from 'listr';
-
-const childProcess = require('child_process');
+import { exec, execSync } from 'child_process';
 
 
 // Get the version
 export async function version() {
   var pjson = require('../package.json');
   console.log('makeUp cli v' + pjson.version);
+  return true;
+}
+
+
+// Install framework: --------------- //
+export async function installFw() {
+  const tasks = new Listr([
+    {
+      title: 'Downloading framework ...',
+      task: async (c, t) => {
+        await new Promise((resolve, reject) => {
+          const ls = exec('git clone https://github.com/dahas/cookie_management.git assasasasasa');
+          ls.on('exit', (code) => {
+            if (code == 0) { // OK
+              resolve(`child process exited with code ${code}`);
+              t.title = 'Framework downloaded';
+              c.fwExists = true;
+            } else if (code >= 1 && code < 128) { // ERROR
+              resolve(`Child process exited with code ${code}`);
+              t.title = 'Download failed';
+              t.skip(`Child process exited with code ${code}`);
+              c.fwExists = false;
+            } else { // EXISTS
+              resolve(`Child process exited with code ${code}`);
+              t.title = 'Download stopped'
+              t.skip('Directory not empty.');
+              c.fwExists = true;
+            }
+          });
+        });
+      }
+    },
+    {
+      title: 'Installing dependencies ...',
+      task: async (c, t) => {
+        if (!c.fwExists) {
+          t.title = 'Installation aborted';
+          t.skip('Framework missing');
+        } else {
+          await new Promise((resolve, reject) => {
+            const ls = exec('npm --prefix ./public i ./public');
+            ls.on('exit', (code) => {
+              resolve(`child process exited with code ${code}`);
+              t.title = 'Dependencies installed'
+            });
+          });
+        }
+      }
+    }
+  ]);
+
+  tasks.run()
+    .then((c) => {
+      if (c.fwExists) {
+        console.log('%s makeUp installed successfully!', chalk.green.bold('DONE'));
+      } else {
+        console.log('%s makeUp could not be installed!', chalk.red.bold('ERROR'));
+      }
+    })
+    .catch(err => {
+      // console.error(err);
+    });
+
   return true;
 }
 
@@ -216,7 +278,7 @@ function _sassWatcher(sassDetected) {
     return {
       title: 'SASS watcher enabled',
       task: () => {
-        childProcess.exec('node-sass -w public/sass/styles.scss -o public/resources/css');
+        exec('node-sass -w public/sass/styles.scss -o public/resources/css');
       }
     }
   } else {
@@ -232,7 +294,7 @@ function _sassWatcher(sassDetected) {
 
 function _detectSass() {
   try {
-    childProcess.execSync('node-sass --version');
+    execSync('node-sass --version');
     return true;
   } catch (e) {
     return false;

@@ -1,6 +1,6 @@
 import arg from 'arg';
 import inquirer from 'inquirer';
-import { version, createModule, createService, launchWebserver, launchSass } from './main';
+import { version, installFw, createModule, createService, launchWebserver, launchSass } from './main';
 
 
 export async function cli() {
@@ -8,6 +8,8 @@ export async function cli() {
     let options = applyArgs();
     if (options && options.version) {
       await version();
+    } else if (options && options.install) {
+      await installFw();
     } else if (options && options.webserver) {
       await launchWebserver();
     } else if (options && options.sass) {
@@ -32,15 +34,17 @@ function applyArgs() {
   const args = arg(
     {
       '--version': Boolean,
+      '--install': Boolean,
       '--create-module': Boolean,
       '--create-service': Boolean,
       '--serve': Boolean,
-      '--scss': Boolean,
+      '--sass': Boolean,
       '-v': '--version',
+      '-i': '--install',
       '-m': '--create-module',
       '-s': '--create-service',
       '-p': '--serve',
-      '-w': '--scss'
+      '-w': '--sass'
     },
     { 
       permissive: true,
@@ -49,10 +53,11 @@ function applyArgs() {
   );
   return {
     version: args['--version'],
+    install: args['--install'],
     module: args['--create-module'],
     service: args['--create-service'],
     webserver: args['--serve'],
-    sass: args['--scss']
+    sass: args['--sass']
   };
 }
 
