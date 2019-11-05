@@ -1,7 +1,13 @@
 import arg from 'arg';
 import inquirer from 'inquirer';
-import { version, installFw, createModule, createService, launchWebserver, launchSass } from './main';
-
+import {
+  version,
+  installFw,
+  createModule,
+  createService,
+  launchWebserver,
+  launchSass
+} from './main';
 
 export async function cli() {
   try {
@@ -25,10 +31,9 @@ export async function cli() {
     }
   } catch (e) {
     // console.log(e)
-    console.log('Error: Something went wrong!')
+    console.log('Error: Something went wrong!');
   }
 }
-
 
 function applyArgs() {
   const args = arg(
@@ -46,9 +51,9 @@ function applyArgs() {
       '-p': '--serve',
       '-w': '--sass'
     },
-    { 
+    {
       permissive: true,
-      argv: process.argv.slice(2) 
+      argv: process.argv.slice(2)
     }
   );
   return {
@@ -61,7 +66,6 @@ function applyArgs() {
   };
 }
 
-
 async function prompt(options) {
   const questions = [];
 
@@ -71,8 +75,8 @@ async function prompt(options) {
       type: 'input',
       name: 'modName',
       message: 'Please enter a valid name for the module:',
-      validate: (input) => {
-        return input.length > 0 && /^[a-zA-Z]+$/.test(input)
+      validate: input => {
+        return input.length > 0 && /^[a-zA-Z]+$/.test(input);
       }
     });
     questions.push({
@@ -80,13 +84,13 @@ async function prompt(options) {
       name: 'modType',
       message: 'Of what type is the module supposed to be?',
       choices: ['PAGE', 'CONTENT', 'MENU'],
-      default: 'PAGE',
+      default: 'PAGE'
     });
     questions.push({
       type: 'confirm',
       name: 'modProt',
       message: 'Should the module be protected?',
-      default: false,
+      default: false
     });
 
     const answers = await inquirer.prompt(questions);
@@ -95,7 +99,7 @@ async function prompt(options) {
       ...options,
       module: options.modName || answers.modName,
       modType: options.modType || answers.modType,
-      modProt: options.modProt || answers.modProt,
+      modProt: options.modProt || answers.modProt
     };
   }
 
@@ -105,8 +109,8 @@ async function prompt(options) {
       type: 'input',
       name: 'srvName',
       message: 'Please enter a valid name for the service:',
-      validate: (input) => {
-        return input.length > 0 && /^[a-zA-Z]+$/.test(input)
+      validate: input => {
+        return input.length > 0 && /^[a-zA-Z]+$/.test(input);
       }
     });
 
