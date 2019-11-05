@@ -197,7 +197,7 @@ export async function launchWebserver() {
   const sassDetected = _detectSass();
   const port = 2400;
   const tasks = new Listr([
-    _sassWatcher(sassDetected),
+    sassWatcher(sassDetected),
     {
       title: 'Webserver launched',
       task: () => {
@@ -219,7 +219,7 @@ export async function launchWebserver() {
 // Launch SASS watcher: --------------- //
 export async function launchSass() {
   const sassDetected = _detectSass();
-  const tasks = new Listr([_sassWatcher(sassDetected)]);
+  const tasks = new Listr([sassWatcher(sassDetected)]);
 
   await tasks.run()
     .then(() => {
@@ -230,6 +230,26 @@ export async function launchSass() {
     .catch(() => null);
 
   return true;
+}
+
+
+function sassWatcher(sassDetected) {
+  if (sassDetected) {
+    return {
+      title: 'SASS watcher enabled',
+      task: () => {
+        exec('node-sass -w public/sass/styles.scss -o public/resources/css');
+      }
+    }
+  } else {
+    return {
+      title: 'SASS not found',
+      skip: () => {
+        return 'Please run: npm i -g node-sass';
+      },
+      task: () => { null }
+    }
+  }
 }
 
 
@@ -280,37 +300,18 @@ function _writeFile(targetDirectory, data) {
   });
 }
 
-function _sassWatcher(sassDetected) {
-  if (sassDetected) {
-    return {
-      title: 'SASS watcher enabled',
-      task: () => {
-        exec('node-sass -w public/sass/styles.scss -o public/resources/css');
-      }
-    }
-  } else {
-    return {
-      title: 'SASS not found',
-      skip: () => {
-        return 'Please run: npm i -g node-sass';
-      },
-      task: () => { null }
-    }
-  }
-}
-
-function _detectSass() {
+function _detectGit() {
   try {
-    execSync('node-sass --version');
+    execSync('git --version');
     return true;
   } catch (e) {
     return false;
   }
 }
 
-function _detectGit() {
+function _detectSass() {
   try {
-    execSync('git --version');
+    execSync('node-sass --version');
     return true;
   } catch (e) {
     return false;
