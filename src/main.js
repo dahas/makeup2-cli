@@ -19,26 +19,32 @@ export async function installFw() {
     {
       title: 'Downloading framework ...',
       task: async (c, t) => {
-        await new Promise((resolve, reject) => {
-          const ls = exec('git clone https://github.com/dahas/makeup2.git .');
-          ls.on('exit', (code) => {
-            if (code == 0) { // OK
-              resolve(`child process exited with code ${code}`);
-              t.title = 'Framework downloaded';
-              c.fwExists = true;
-            } else if (code >= 1 && code < 128) { // ERROR
-              resolve(`Child process exited with code ${code}`);
-              t.title = 'Download failed';
-              t.skip(`Child process exited with code ${code}`);
-              c.fwExists = false;
-            } else { // EXISTS
-              resolve(`Child process exited with code ${code}`);
-              t.title = 'Download stopped'
-              t.skip('Directory not empty.');
-              c.fwExists = true;
-            }
+        if (!_detectGit()) { // NO GIT
+          t.title = 'Download failed';
+          t.skip('Git not found. Please download and install from here: https://git-scm.com/download');
+          c.fwExists = false;
+        } else {
+          await new Promise((resolve, reject) => {
+            const ls = exec('git clone https://github.com/dahas/makeup2.git .');
+            ls.on('exit', (code) => {
+              if (code == 0) { // OK
+                resolve(`child process exited with code ${code}`);
+                t.title = 'Framework downloaded';
+                c.fwExists = true;
+              } else if (code >= 1 && code < 128) { // ERROR
+                resolve(`Child process exited with code ${code}`);
+                t.title = 'Download failed';
+                t.skip(`Child process exited with code ${code}`);
+                c.fwExists = false;
+              } else { // EXISTS
+                resolve(`Child process exited with code ${code}`);
+                t.title = 'Download stopped'
+                t.skip('Directory not empty.');
+                c.fwExists = true;
+              }
+            });
           });
-        });
+        }
       }
     },
     {
@@ -295,6 +301,15 @@ function _sassWatcher(sassDetected) {
 function _detectSass() {
   try {
     execSync('node-sass --version');
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function _detectGit() {
+  try {
+    execSync('git --version');
     return true;
   } catch (e) {
     return false;
