@@ -62,7 +62,7 @@ export async function installFw() {
           t.skip('Framework missing');
         } else {
           await new Promise((resolve, reject) => {
-            const ls = exec('npm --prefix ./public i ./public');
+            const ls = exec('cd public && npm i');
             ls.on('exit', code => {
               resolve(`child process exited with code ${code}`);
               t.title = 'Dependencies installed';
