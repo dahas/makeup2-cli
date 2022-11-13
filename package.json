@@ -1,6 +1,6 @@
 {
   "name": "makeup-cli",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "This CLI is intended to be used with the 'makeUp' framework, which you can find here: https://github.com/dahas/makeup2",
   "main": "src/index.js",
   "bin": {
