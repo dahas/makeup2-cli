@@ -203,6 +203,7 @@ export async function createService(options) {
         createFile(
           options.sourcesDirectory,
           options.targetDirectory,
+          options.service,
           options.service
         )
     }
@@ -315,6 +316,7 @@ function _readFile(sourcesDirectory, fileName, className, prot) {
       if (err) reject(err);
       className = className.charAt(0).toUpperCase() + className.slice(1); // Uppercase first letter
       data = data.replace(/CCCC/g, className);
+      data = data.replace(/XXXX/g, className);
       data = data.replace(/FFFF/g, fileName);
       data = data.replace(/PPPP/g, prot ? '1' : '0');
       resolve(data);
