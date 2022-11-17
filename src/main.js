@@ -47,7 +47,7 @@ export async function installFw() {
                 resolve(`Child process exited with code ${code}`);
                 t.title = 'Download stopped';
                 t.skip('Directory not empty.');
-                c.fwExists = true;
+                c.fwExists = false;
               }
             });
           });
