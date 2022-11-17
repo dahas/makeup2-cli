@@ -1,6 +1,6 @@
 {
   "name": "makeup-cli",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "This CLI is intended to be used with the 'makeUp' framework, which you can find here: https://github.com/dahas/makeup2",
   "main": "src/index.js",
   "bin": {
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dahas/makeup2-cli/tree/v0.2.7"
+    "url": "https://github.com/dahas/makeup2-cli/tree/v0.2.8"
   },
   "author": "Martin J. Wolf <kontakt@martinwolf.info> (http://www.martinwolf.info)",
   "license": "ISC",

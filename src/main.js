@@ -28,13 +28,14 @@ export async function installFw() {
           c.fwExists = false;
         } else {
           await new Promise((resolve, reject) => {
-            const ls = exec('git clone https://github.com/dahas/makeup2.git .');
+            const ls = exec('git clone https://github.com/dahas/makeup2.git . ');
             ls.on('exit', code => {
               if (code == 0) {
                 // ---- OK
                 resolve(`child process exited with code ${code}`);
                 t.title = 'Framework downloaded';
                 c.fwExists = true;
+                fs.rm('.git', { recursive: true }, () => { return; }); // Clean up!
               } else if (code >= 1 && code < 128) {
                 // ---- ERROR
                 resolve(`Child process exited with code ${code}`);
