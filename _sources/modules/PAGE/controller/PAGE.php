@@ -16,12 +16,7 @@ class CCCC extends Module
         parent::__construct();
     }
 
-    /**
-     * This function prepares the module for rendering.
-     *
-     * @param string $modName
-     * @return string
-     */
+
     protected function build() : string
     {
         $m = [];
@@ -34,10 +29,11 @@ class CCCC extends Module
 
 
     /**
-     * This is an example of a task
+     * A task is simply a method that is triggered with a request parameter. Like so: "?task=doSomething"
 	 */
-	public function example()
-	{
+	public function doSomething()
+	{ 
+        // Do something ...
         return;
 	}
 

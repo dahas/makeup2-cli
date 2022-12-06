@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import Listr from 'listr';
 import { exec, execSync } from 'child_process';
-import phpServer from 'php-server';
 
 // OPTIONS: ///////////////////////////////////////////
 
@@ -225,6 +224,7 @@ export async function launchWebserver() {
     {
       title: 'Webserver launched',
       task: () => {
+        const phpServer = require('php-server');
         phpServer({
           port: port,
           base: './public'

@@ -30,7 +30,6 @@ export async function cli() {
       }
     }
   } catch (e) {
-    // console.log(e)
     console.log('Error: Something went wrong!');
   }
 }
@@ -79,13 +78,13 @@ async function prompt(options) {
         return input.length > 0 && /^[a-zA-Z]+$/.test(input);
       }
     });
-    questions.push({
-      type: 'list',
-      name: 'modType',
-      message: 'Of what type is the module supposed to be?',
-      choices: ['PAGE', 'CONTENT', 'MENU'],
-      default: 'PAGE'
-    });
+    // questions.push({
+    //   type: 'list',
+    //   name: 'modType',
+    //   message: 'Of what type is the module supposed to be?',
+    //   choices: ['PAGE', 'CONTENT', 'MENU'],
+    //   default: 'PAGE'
+    // });
     questions.push({
       type: 'confirm',
       name: 'modProt',
@@ -98,7 +97,7 @@ async function prompt(options) {
     return {
       ...options,
       module: options.modName || answers.modName,
-      modType: options.modType || answers.modType,
+      modType: 'PAGE', // modType: options.modType || answers.modType,
       modProt: options.modProt || answers.modProt
     };
   }

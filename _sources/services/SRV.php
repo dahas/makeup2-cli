@@ -1,29 +1,24 @@
 <?php
 
-namespace makeup\services;
+namespace makeUp\services;
 
-use makeup\lib\Service;
-use makeup\lib\ServiceItem;
-
+use makeUp\lib\attributes\Data;
+use makeUp\lib\Service;
+use makeUp\lib\ServiceItem;
 
 /**
- * Collection of XXXX
- * 
- * @package makeup\services
+ * Please provide a table name, the column with the unique id as 'key' and the relevant columns.
  */
-class XXXX extends Service
+#[Data(
+    table: 'table_name',
+    key: 'unique_id',
+    columns: 'col1, col2, col3, ...'
+)]
+class XXXX extends Service 
 {
     public function __construct()
     {
-        /**
-         * IMPORTANT: Modify the constructor first.
-         * Supply the table name, a column with a unique id and the relevant columns.
-         */
-        parent::__construct([
-            "table" => "table_name",
-			"uniqueID" => "unique_id",
-			"columns" => "col1, col2, col3, ..."
-        ]);
+        parent::__construct();
     }
 }
 
@@ -33,7 +28,6 @@ class XXXX extends Service
  *
  * @package makeup\services
  */
-class XXXXItem extends ServiceItem
-{
+class XXXXItem extends ServiceItem {
 
 }
