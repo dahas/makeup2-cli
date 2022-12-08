@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import Listr from 'listr';
-import { exec, execSync } from 'child_process';
+import { exec, execSync, spawn } from 'child_process';
 
 // OPTIONS: ///////////////////////////////////////////
 
@@ -224,11 +224,9 @@ export async function launchWebserver() {
     {
       title: 'Webserver launched',
       task: () => {
-        const phpServer = require('php-server');
-        phpServer({
-          port: port,
-          base: './public'
-        });
+        var p = path.join(process.cwd(), '/public')
+        var spawn = require('child_process').spawn;
+        var ls = spawn('php', ['-S', 'localhost:'+port, '-t', p], { stdio: 'inherit' });
       }
     }
   ]);
@@ -236,7 +234,7 @@ export async function launchWebserver() {
   await tasks.run().catch(e => null);
   console.log(
     chalk.green.bold('OK') +
-      ` Webserver is running on http://localhost:${port} ...`
+      ` PHP webserver is running ...`
   );
   return true;
 }

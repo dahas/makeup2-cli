@@ -1,12 +1,6 @@
 <?php
 
 use makeup\lib\Module;
-// use makeup\lib\RQ;
-// use makeup\lib\Config;
-// use makeup\lib\Tools;
-// use makeup\lib\Session;
-// use makeup\lib\Cookie;
-// use makeup\lib\Lang;
 
 
 class CCCC extends Module
@@ -24,12 +18,14 @@ class CCCC extends Module
 
         $m['##MODULE##'] = $this->modName;
 
-        return $this->getTemplate()->parse($m, $s);
+        $html = $this->getTemplate("FFFF.html")->parse($m, $s);
+        return $this->render($html);
     }
 
 
     /**
-     * A task is simply a method that is triggered with a request parameter. Like so: "?task=doSomething"
+     * A task is simply a method that is triggered with a request parameter.
+     * Like so: "?mod=FFFF&task=doSomething". Or rewritten: "/FFFF/doSomething/"
 	 */
 	public function doSomething()
 	{ 
