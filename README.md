@@ -2,20 +2,16 @@
 
 ## What is it?
 
-The CLI is part of the **makeUp** framework. It makes no sense using it without the framework! 
+This is the CLI of the **makeUp** PHP framework. Install and use it to create Bootstrap Single Page Applications.
 
-**makeUp** is work in progress. If you are interested in what it is about, you can find the framework here: https://github.com/dahas/makeup2
+The **makeUp** PHP framework is work in progress. If you are interested, you can learn more about it here: https://github.com/dahas/makeup
 
 ## Installation
-
-The CLI must be installed globally:
-
 ```
 $ npm i -g makeup-cli
 ```
 
 ## Usage example
-
 ```
 $ makeup -v
 ```
@@ -27,8 +23,9 @@ Argument|Short|Description
 <code>--install</code> | <code>-i</code> | Download framework and install dependencies
 <code>--create-module</code> | <code>-m</code> | Create a custom module
 <code>--create-service</code> | <code>-s</code> | Create a service
+<code>--php-server</code> | <code>-p</code> | Launch PHP Web Server
 <code>--sass</code> | <code>-w</code> | Start SASS watcher
-<code>--serve</code> | <code>-p</code> | Start SASS watcher and launch PHP webserver
+<code>--serve</code> | <code>-pw</code> | Start SASS and launch PHP Server
 <code>--version</code> | <code>-v</code> | Get the version number
 
 ## Author 

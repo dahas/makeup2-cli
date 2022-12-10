@@ -28,7 +28,7 @@ export async function installFw() {
           c.fwExists = false;
         } else {
           await new Promise((resolve, reject) => {
-            const ls = exec('git clone https://github.com/dahas/makeup2.git . ');
+            const ls = exec('git clone https://github.com/dahas/makeUp.git . ');
             ls.on('exit', code => {
               if (code == 0) {
                 // ---- OK
@@ -234,7 +234,7 @@ export async function launchWebserver() {
   await tasks.run().catch(e => null);
   console.log(
     chalk.green.bold('OK') +
-      ` PHP webserver is running ...`
+      ` PHP webserver is running. "CTRL + C" to quit.`
   );
   return true;
 }
