@@ -224,7 +224,7 @@ export async function launchWebserver() {
       task: () => {
         var p = path.join(process.cwd(), '/public')
         var spawn = require('child_process').spawn;
-        var ls = spawn('php', ['-S', 'localhost:' + port, '-t', p], { stdio: 'inherit' });
+        spawn('php', ['-S', 'localhost:' + port, '-t', p], { stdio: 'inherit' });
       }
     }
   ]);
@@ -261,7 +261,7 @@ function sassWatcher(sassDetected) {
     return {
       title: 'SASS watcher enabled',
       task: () => {
-        exec('node-sass -w public/sass/styles.scss -o public/resources/css');
+        exec('node-sass -w makeup/sass/styles.scss -o public/resources/css');
       }
     };
   } else {
