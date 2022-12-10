@@ -217,16 +217,14 @@ export async function createService(options) {
 
 // Launch build in PHP webserver: ------------------ //
 export async function launchWebserver() {
-  const sassDetected = _detectSass();
   const port = 2400;
   const tasks = new Listr([
-    sassWatcher(sassDetected),
     {
       title: 'Webserver launched',
       task: () => {
         var p = path.join(process.cwd(), '/public')
         var spawn = require('child_process').spawn;
-        var ls = spawn('php', ['-S', 'localhost:'+port, '-t', p], { stdio: 'inherit' });
+        var ls = spawn('php', ['-S', 'localhost:' + port, '-t', p], { stdio: 'inherit' });
       }
     }
   ]);
@@ -234,7 +232,7 @@ export async function launchWebserver() {
   await tasks.run().catch(e => null);
   console.log(
     chalk.green.bold('OK') +
-      ` PHP webserver is running. "CTRL + C" to quit.`
+    ` PHP webserver is running. "CTRL + C" to quit.`
   );
   return true;
 }
@@ -277,6 +275,30 @@ function sassWatcher(sassDetected) {
       }
     };
   }
+}
+
+// Launch PHP Web Server and start SASS Watcher: ------------------ //
+export async function launchSassPHP() {
+  const sassDetected = _detectSass();
+  const port = 2400;
+  const tasks = new Listr([
+    sassWatcher(sassDetected),
+    {
+      title: 'Webserver launched',
+      task: () => {
+        var p = path.join(process.cwd(), '/public')
+        var spawn = require('child_process').spawn;
+        var ls = spawn('php', ['-S', 'localhost:' + port, '-t', p], { stdio: 'inherit' });
+      }
+    }
+  ]);
+
+  await tasks.run().catch(e => null);
+  console.log(
+    chalk.green.bold('OK') +
+    ` PHP webserver is running. SASS is watching for changes. "CTRL + C" to quit.`
+  );
+  return true;
 }
 
 // Tasks: /////////////////////////////////////////////

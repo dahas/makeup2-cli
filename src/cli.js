@@ -5,8 +5,9 @@ import {
   installFw,
   createModule,
   createService,
+  launchSass,
   launchWebserver,
-  launchSass
+  launchSassPHP
 } from './main';
 
 export async function cli() {
@@ -20,6 +21,8 @@ export async function cli() {
       await launchWebserver();
     } else if (options && options.sass) {
       await launchSass();
+    } else if (options && options.sassphp) {
+      await launchSassPHP();
     } else {
       options = await prompt(options);
       if (options && options.module) {
@@ -41,14 +44,16 @@ function applyArgs() {
       '--install': Boolean,
       '--create-module': Boolean,
       '--create-service': Boolean,
-      '--serve': Boolean,
+      '--php': Boolean,
       '--sass': Boolean,
+      '--serve': Boolean,
       '-v': '--version',
       '-i': '--install',
       '-m': '--create-module',
       '-s': '--create-service',
-      '-p': '--serve',
-      '-w': '--sass'
+      '-p': '--php',
+      '-w': '--sass',
+      '-h': '--serve'
     },
     {
       permissive: true,
@@ -60,8 +65,9 @@ function applyArgs() {
     install: args['--install'],
     module: args['--create-module'],
     service: args['--create-service'],
-    webserver: args['--serve'],
-    sass: args['--sass']
+    webserver: args['--php'],
+    sass: args['--sass'],
+    sassphp: args['--serve']
   };
 }
 
