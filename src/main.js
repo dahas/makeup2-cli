@@ -261,7 +261,10 @@ function sassWatcher(sassDetected) {
     return {
       title: 'SASS watcher enabled',
       task: () => {
-        exec('node-sass -w makeup/sass/styles.scss -o public/resources/css');
+        const sass = exec('node-sass -w makeup/sass/styles.scss -o public/resources/css');
+        sass.stdout.on('data', function (data) {
+          console.log(data);
+        });
       }
     };
   } else {
