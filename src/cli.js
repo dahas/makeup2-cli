@@ -81,7 +81,14 @@ async function prompt(options) {
       name: 'modName',
       message: 'Please enter a valid name for the module:',
       validate: input => {
-        return input.length > 0 && /^[a-zA-Z]+$/.test(input);
+        let validChars = input.length > 0 && /^[a-zA-Z]+$/.test(input);
+        let validName = !phpReservedWords.includes(input);
+        if (validChars && validName)
+          return true;
+        if (!validChars)
+          return "Only letters are allowed!"
+        if (!validName)
+          return "This name is reserved by PHP!"
       }
     });
     // questions.push({
@@ -127,3 +134,15 @@ async function prompt(options) {
     };
   }
 }
+
+const phpReservedWords = [
+  'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch',
+  'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else',
+  'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile',
+  'eval', 'exit', 'extends', 'final', 'finally', 'for', 'foreach', 'function', 'generator', 'global', 'goto',
+  'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset',
+  'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require',
+  'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while',
+  'xor', 'yield', 'int', 'float', 'bool', 'string', 'mixed', 'void', 'null', 'true', 'false', 'iterable',
+  'resource', 'numeric', 'object',
+];
