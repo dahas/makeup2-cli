@@ -98,21 +98,26 @@ export async function installFw() {
 
 // Create a module: -------------------------------- //
 export async function createModule(options) {
-  let fileName = options.module
-    .replace(/\.?([A-Z]+)/g, (x, y) => '_' + y.toLowerCase())
-    .replace(/^_/, '');
+
+  let fileName = options.module;
+  fileName = fileName[0].toUpperCase() + fileName.slice(1)
   options = {
     ...options,
     targetDirectory: path.join(
       options.targetDirectory || process.cwd(),
-      '/makeup/modules',
+      '/makeUp/app/modules',
       fileName
     )
   };
+  
+  if (fs.existsSync(options.targetDirectory)) {
+    console.log('%s A Module with this name already exists.', chalk.red.bold('ERROR!'));
+    return;
+  }
 
   const moduleDir = path.resolve(
     __dirname,
-    '../_sources/modules/' + options.modType
+    '../_sources/modules/PAGE'
   );
   options.sourcesDirectory = moduleDir;
 
@@ -124,58 +129,53 @@ export async function createModule(options) {
       const filePath = path.resolve(
         options.sourcesDirectory,
         'config',
-        options.modType + '.ini'
+        'PAGE.ini'
       );
       const targetPath = path.join(
         options.targetDirectory || process.cwd(),
-        'config',
         fileName + '.ini'
       );
       createFile(
         filePath,
         targetPath,
         fileName,
-        options.module,
-        options.modProt
+        options.protected,
+        options.title
       );
     }
   });
 
-  if (options.modType === 'PAGE' || options.modType === 'CONTENT') {
-    tasks.push({
-      title: 'Controller created',
-      task: () => {
-        const filePath = path.resolve(
-          options.sourcesDirectory,
-          'controller',
-          options.modType + '.php'
-        );
-        const targetPath = path.join(
-          options.targetDirectory || process.cwd(),
-          'controller',
-          fileName + '.php'
-        );
-        createFile(filePath, targetPath, fileName, options.module);
-      }
-    });
+  tasks.push({
+    title: 'Controller created',
+    task: () => {
+      const filePath = path.resolve(
+        options.sourcesDirectory,
+        'controller',
+        'PAGE.php'
+      );
+      const targetPath = path.join(
+        options.targetDirectory || process.cwd(),
+        fileName + '.php'
+      );
+      createFile(filePath, targetPath, fileName);
+    }
+  });
 
-    tasks.push({
-      title: 'Template created',
-      task: () => {
-        const filePath = path.resolve(
-          options.sourcesDirectory,
-          'view',
-          options.modType + '.html'
-        );
-        const targetPath = path.join(
-          options.targetDirectory || process.cwd(),
-          'view',
-          fileName + '.html'
-        );
-        createFile(filePath, targetPath, fileName, options.module);
-      }
-    });
-  }
+  tasks.push({
+    title: 'Template created',
+    task: () => {
+      const filePath = path.resolve(
+        options.sourcesDirectory,
+        'view',
+        'PAGE.html'
+      );
+      const targetPath = path.join(
+        options.targetDirectory || process.cwd(),
+        fileName + '.html'
+      );
+      createFile(filePath, targetPath, fileName);
+    }
+  });
 
   const listr = new Listr(tasks);
   await listr.run();
@@ -185,14 +185,22 @@ export async function createModule(options) {
 
 // Create a service: ------------------------------- //
 export async function createService(options) {
+
+  let fileName = options.service;
+  fileName = fileName[0].toUpperCase() + fileName.slice(1)
   options = {
     ...options,
     targetDirectory: path.join(
       options.targetDirectory || process.cwd(),
-      '/makeup/services',
-      options.service.toLowerCase() + '.php'
+      '/makeUp/services',
+      fileName + '.php'
     )
   };
+  
+  if (fs.existsSync(options.targetDirectory)) {
+    console.log('%s A Service with this name already exists.', chalk.red.bold('ERROR!'));
+    return;
+  }
 
   const serviceFile = path.resolve(__dirname, '../_sources/services/SRV.php');
   options.sourcesDirectory = serviceFile;
@@ -261,7 +269,7 @@ function sassWatcher(sassDetected) {
     return {
       title: 'SASS watcher enabled',
       task: () => {
-        const sass = exec('node-sass -w makeup/sass/styles.scss -o public/resources/css');
+        const sass = exec('node-sass -w makeUp/sass/styles.scss -o public/resources/css');
         sass.stdout.on('data', function (data) {
           console.log(data);
         });
@@ -310,12 +318,12 @@ async function createFile(
   sourcesDirectory,
   targetDirectory,
   fileName,
-  className,
-  prot
+  prot,
+  title
 ) {
   try {
     await _createPath(targetDirectory);
-    let data = await _readFile(sourcesDirectory, fileName, className, prot);
+    let data = await _readFile(sourcesDirectory, fileName, prot, title);
     return await _writeFile(targetDirectory, data);
   } catch (e) {
     console.error('%s' + e, chalk.red.bold('ERROR'));
@@ -329,20 +337,20 @@ function _createPath(targetDirectory) {
   return new Promise((resolve, reject) => {
     fs.mkdir(basepath, { recursive: true }, err => {
       if (err) reject(err);
-      resolve('Folders created successfully');
+      resolve('Folder created successfully');
     });
   });
 }
 
-function _readFile(sourcesDirectory, fileName, className, prot) {
+function _readFile(sourcesDirectory, fileName, prot, title) {
   return new Promise((resolve, reject) => {
     fs.readFile(sourcesDirectory, 'utf8', (err, data) => {
       if (err) reject(err);
-      className = className.charAt(0).toUpperCase() + className.slice(1); // Uppercase first letter
-      data = data.replace(/CCCC/g, className);
-      data = data.replace(/XXXX/g, className);
+      data = data.replace(/CCCC/g, fileName);
+      data = data.replace(/XXXX/g, fileName);
       data = data.replace(/FFFF/g, fileName);
       data = data.replace(/PPPP/g, prot ? '1' : '0');
+      data = data.replace(/TTTT/g, title);
       resolve(data);
     });
   });

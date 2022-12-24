@@ -1,7 +1,7 @@
 <?php
 
 use makeUp\lib\Lang;
-use makeup\lib\Module;
+use makeUp\lib\Module;
 // use makeUp\lib\attributes\Inject;
 
 
@@ -11,24 +11,25 @@ class CCCC extends Module
     // protected $SampleService;
 
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-
     protected function build() : string
     {
+        $params = Module::getParameters(); // Use this method to retrieve sanitized GET and POST data.
+
         $m["[[MODULE]]"] = $this->modName;
 
         $m["[[MOD_CREATED_SUCCESS]]"] = Lang::get("module_created_success");
         $m["[[CONTINUE_LEARNING]]"] = Lang::get("continue_learning");
 
         $s["{{SAMPLE_DATA}}"] = "";
-        $slice = $this->getTemplate()->getSlice("{{SAMPLE_DATA}}");
+        
+        /******************************************************************************************
+         | The below section requires a MySQL database. Before uncommenting please make sure you  |
+         | have MySQL installed and the server is running. Then import the file 'sampledata.sql'  |
+         | located in the 'makeUp' folder. Also enter the necessary infos in the database section |
+         | of 'App.ini' and uncomment the Service above.                                          | 
+         *****************************************************************************************/
 
-        // To retrieve sample data, connect a database, import 'sample_database.sql' 
-        // and enable the Service by removing the comments.
+        // $slice = $this->getTemplate()->getSlice("{{SAMPLE_DATA}}");
 
         // $this->SampleService->read();
 
@@ -57,12 +58,11 @@ class CCCC extends Module
 
     /**
      * A task is simply a method that is triggered with a request parameter.
-     * Like so: "?mod=FFFF&task=doSomething". Or rewritten: "/FFFF/doSomething/"
+     * Like so: "/FFFF?task=doSomething".
 	 */
 	public function doSomething()
 	{ 
         // Do something ...
-        return;
 	}
 
 }

@@ -91,18 +91,21 @@ async function prompt(options) {
           return "This name is reserved by PHP!"
       }
     });
-    // questions.push({
-    //   type: 'list',
-    //   name: 'modType',
-    //   message: 'Of what type is the module supposed to be?',
-    //   choices: ['PAGE', 'CONTENT', 'MENU'],
-    //   default: 'PAGE'
-    // });
+
     questions.push({
       type: 'confirm',
-      name: 'modProt',
+      name: 'protected',
       message: 'Should the module be protected?',
       default: false
+    });
+
+    questions.push({
+      type: 'input',
+      name: 'title',
+      message: 'Which title should be set? (Optional)',
+      validate: input => {
+        return true;
+      }
     });
 
     const answers = await inquirer.prompt(questions);
@@ -110,8 +113,8 @@ async function prompt(options) {
     return {
       ...options,
       module: options.modName || answers.modName,
-      modType: 'PAGE', // modType: options.modType || answers.modType,
-      modProt: options.modProt || answers.modProt
+      protected: options.protected || answers.protected,
+      title: options.title || answers.title
     };
   }
 
@@ -122,7 +125,14 @@ async function prompt(options) {
       name: 'srvName',
       message: 'Please enter a valid name for the service:',
       validate: input => {
-        return input.length > 0 && /^[a-zA-Z]+$/.test(input);
+        let validChars = input.length > 0 && /^[a-zA-Z]+$/.test(input);
+        let validName = !phpReservedWords.includes(input);
+        if (validChars && validName)
+          return true;
+        if (!validChars)
+          return "Only letters are allowed!"
+        if (!validName)
+          return "This name is reserved by PHP!"
       }
     });
 
