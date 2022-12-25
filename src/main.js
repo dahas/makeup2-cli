@@ -8,8 +8,16 @@ import { exec, execSync, spawn } from 'child_process';
 
 // Get the version: -------------------------------- //
 export async function version() {
-  var pjson = require('../package.json');
-  console.log('makeUp cli v' + pjson.version);
+  const packageJsonPath = path.join(
+    process.cwd(),
+    'package.json'
+  )
+  var makeup = require(packageJsonPath);
+  var cli = require('../package.json');
+  console.log("------------------------------")
+  console.log('| makeUp v' + makeup.version + ' | cli v' + cli.version + ' |');
+  console.log('| Author: Martin J. Wolf     |');
+  console.log("------------------------------")
   return true;
 }
 
