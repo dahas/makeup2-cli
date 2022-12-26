@@ -113,7 +113,7 @@ export async function createModule(options) {
     ...options,
     targetDirectory: path.join(
       options.targetDirectory || process.cwd(),
-      '/makeUp/app/modules',
+      '/makeup/app/modules',
       fileName
     )
   };
@@ -200,7 +200,7 @@ export async function createService(options) {
     ...options,
     targetDirectory: path.join(
       options.targetDirectory || process.cwd(),
-      '/makeUp/services',
+      '/makeup/services',
       fileName + '.php'
     )
   };
@@ -277,7 +277,7 @@ function sassWatcher(sassDetected) {
     return {
       title: 'SASS watcher enabled',
       task: () => {
-        const sass = exec('node-sass -w makeUp/sass/styles.scss -o public/resources/css');
+        const sass = exec('node-sass -w makeup/sass/styles.scss -o public/resources/css');
         sass.stdout.on('data', function (data) {
           console.log(data);
         });
