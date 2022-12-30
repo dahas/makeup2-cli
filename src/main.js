@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Listr from 'listr';
 import { exec, execSync, spawn } from 'child_process';
+import open from 'open';
 
 // OPTIONS: ///////////////////////////////////////////
 
@@ -250,6 +251,7 @@ export async function launchWebserver() {
     chalk.green.bold('OK') +
     ` PHP webserver is running. "CTRL + C" to quit.`
   );
+  open('http://localhost:' + port);
   return true;
 }
 
@@ -317,6 +319,7 @@ export async function launchSassPHP() {
     chalk.green.bold('OK') +
     ` PHP webserver is running. SASS is watching for changes. "CTRL + C" to quit.`
   );
+  open('http://localhost:' + port);
   return true;
 }
 
