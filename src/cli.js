@@ -3,6 +3,7 @@ import inquirer from 'inquirer';
 import {
   version,
   installFw,
+  installDB,
   createModule,
   createService,
   launchSass,
@@ -31,6 +32,9 @@ export async function cli() {
       if (options && options.service) {
         await createService(options);
       }
+      if (options && options.db) {
+        await installDB(options);
+      }
     }
   } catch (e) {
     console.log('Error: Something went wrong!');
@@ -42,18 +46,20 @@ function applyArgs() {
     {
       '--version': Boolean,
       '--install': Boolean,
+      '--install-db': Boolean,
       '--create-module': Boolean,
       '--create-service': Boolean,
-      '--php': Boolean,
-      '--sass': Boolean,
       '--serve': Boolean,
+      '--sass': Boolean,
+      '--watch': Boolean,
       '-v': '--version',
       '-i': '--install',
+      '-d': '--install-db',
       '-m': '--create-module',
       '-s': '--create-service',
-      '-p': '--php',
+      '-p': '--serve',
       '-w': '--sass',
-      '-h': '--serve'
+      '-h': '--watch'
     },
     {
       permissive: true,
@@ -63,11 +69,12 @@ function applyArgs() {
   return {
     version: args['--version'],
     install: args['--install'],
+    db: args['--install-db'],
     module: args['--create-module'],
     service: args['--create-service'],
-    webserver: args['--php'],
+    webserver: args['--serve'],
     sass: args['--sass'],
-    sassphp: args['--serve']
+    sassphp: args['--watch']
   };
 }
 
@@ -141,6 +148,38 @@ async function prompt(options) {
     return {
       ...options,
       service: options.srvName || answers.srvName
+    };
+  }
+
+  // DB options: ----------------------------- //
+  if (options.db) {
+    questions.push({
+      type: 'input',
+      name: 'dbHost',
+      message: 'Please enter hostname:',
+      default: 'localhost'
+    });
+
+    questions.push({
+      type: 'input',
+      name: 'dbUser',
+      message: 'Please enter username:',
+      default: 'root'
+    });
+
+    questions.push({
+      type: 'input',
+      name: 'dbPass',
+      message: 'Please enter passwort:'
+    });
+
+    const answers = await inquirer.prompt(questions);
+
+    return {
+      ...options,
+      dbHost: options.dbHost || answers.dbHost,
+      dbUser: options.dbUser || answers.dbUser,
+      dbPass: options.dbPass || answers.dbPass
     };
   }
 }

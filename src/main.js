@@ -118,7 +118,7 @@ export async function createModule(options) {
       fileName
     )
   };
-  
+
   if (fs.existsSync(options.targetDirectory)) {
     console.log('%s A Module with this name already exists.', chalk.red.bold('ERROR!'));
     return;
@@ -205,7 +205,7 @@ export async function createService(options) {
       fileName + '.php'
     )
   };
-  
+
   if (fs.existsSync(options.targetDirectory)) {
     console.log('%s A Service with this name already exists.', chalk.red.bold('ERROR!'));
     return;
@@ -229,6 +229,71 @@ export async function createService(options) {
 
   await tasks.run();
   console.log('%s Service created successfully!', chalk.green.bold('DONE'));
+  return true;
+}
+
+// Install Database: ------------------------------- //
+export async function installDB(options) {
+
+  const mysql = require("mysql");
+
+  const db = mysql.createConnection({
+    host: options.dbHost,
+    user: options.dbUser,
+    password: options.dbPass,
+    multipleStatements: true
+  });
+
+  const tasks = new Listr([
+    {
+      title: 'Connecting to MySQL server',
+      task: () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            db.connect((err) => {
+              if (err) {
+                reject(new Error('Cannot connect to server (' + err.code + ')'));
+              } else {
+                resolve('Connection established.')
+              }
+            });
+          }, 500);
+        });
+      }
+    },
+    {
+      title: 'Creating database',
+      task: () => {
+        return new Promise((resolve, reject) => {
+          const dbFile = path.resolve(__dirname, '../_sources/db', 'SampleDB.sql');
+          const sqlFile = fs.readFileSync(dbFile).toString();
+          setTimeout(() => {
+            db.query(sqlFile, err => {
+              if (err) {
+                reject(new Error('Cannot create database (' + err.code + ')'));
+              } else {
+                resolve('Database "makeup" created.')
+              }
+              db.end();
+            });
+          }, 500);
+        });
+      }
+    }
+  ]);
+
+  await tasks.run()
+    .then(() => { 
+      console.log(chalk.green.bold('OK') + ` Database "makeup" successfully created!
++---------------------------------------------------+
+| NOTE: Don't forget to enter the MySQL credentials |
+| and the name of the database ` + chalk.cyan('makeup') + ` in "App.ini"! |
++---------------------------------------------------+
+`) 
+    })
+    .catch(() => { 
+      console.error(chalk.red.bold('ERROR!') + ' Creation of database aborted!') 
+    });
   return true;
 }
 

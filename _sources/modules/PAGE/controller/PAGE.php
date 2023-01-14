@@ -8,7 +8,7 @@ class CCCC extends Module {
 
     protected function build() : string
     {
-        $data = Module::requestData(); // Use this method to retrieve sanitized GET and POST data.
+        $data = $this->requestData(); // Use this method to retrieve sanitized GET and POST data.
 
         $m["[[MODULE]]"] = $this->modName;
 

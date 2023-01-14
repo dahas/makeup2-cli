@@ -23,9 +23,11 @@ Argument|Short|Description
 <code>--install</code> | <code>-i</code> | Download framework and install dependencies
 <code>--create-module</code> | <code>-m</code> | Create a custom module
 <code>--create-service</code> | <code>-s</code> | Create a service
-<code>--php</code> | <code>-p</code> | Launch PHP Web Server
+<code>--create-service</code> | <code>-s</code> | Create a service
+<code>--install-db</code> | <code>-d</code> | Install a database with sampledata
+<code>--serve</code> | <code>-p</code> | Launch PHP Web Server
 <code>--sass</code> | <code>-w</code> | Start SASS watcher
-<code>--serve</code> | <code>-h</code> | Start SASS and launch PHP Server
+<code>--watch</code> | <code>-h</code> | Start SASS and launch PHP Server
 <code>--version</code> | <code>-v</code> | Get the version number
 
 ## Author 
