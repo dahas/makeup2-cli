@@ -1,21 +1,22 @@
 <?php
 
-use makeUp\lib\Lang;
-use makeUp\lib\Module;
+use makeUp\lib\Template;
+use makeUp\src\Lang;
+use makeUp\src\Module;
+use makeUp\src\Request;
 
 
 class CCCC extends Module {
 
-    protected function build() : string
+    protected function build(Request $request) : string
     {
-        $data = $this->requestData(); // Use this method to retrieve sanitized GET and POST data.
+        $data = $request->getParameters(); // Use this method to retrieve sanitized GET and POST data.
 
-        $m["[[MODULE]]"] = $this->modName;
-
+        $m["[[MODULE]]"] = $request->getModule();
         $m["[[MOD_CREATED_SUCCESS]]"] = Lang::get("module_created_success");
         $m["[[CONTINUE_LEARNING]]"] = Lang::get("continue_learning");
 
-        $html = $this->getTemplate("FFFF.html")->parse($m);
+        $html = Template::load("CCCC")->parse($m);
         return $this->render($html);
     }
 

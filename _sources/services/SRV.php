@@ -2,9 +2,9 @@
 
 namespace makeUp\services;
 
-use makeUp\lib\attributes\Data;
-use makeUp\lib\Service;
-use makeUp\lib\ServiceItem;
+use makeUp\src\attributes\Data;
+use makeUp\src\Service;
+use makeUp\src\ServiceItem;
 
 /**
  * Please provide a table name, the column with the unique id as 'key' and the relevant columns.
