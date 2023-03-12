@@ -64,7 +64,25 @@ export async function installFw() {
       }
     },
     {
-      title: 'Installing dependencies ...',
+      title: 'Installing Backend Dependencies ...',
+      task: async (c, t) => {
+        if (!c.fwExists) {
+          // ---- NO FRAMEWORK
+          t.title = 'Installation aborted';
+          t.skip('Framework missing');
+        } else {
+          await new Promise((resolve, reject) => {
+            const ls = exec('cd makeup && composer install');
+            ls.on('exit', code => {
+              resolve(`child process exited with code ${code}`);
+              t.title = 'Backend dependencies installed';
+            });
+          });
+        }
+      }
+    },
+    {
+      title: 'Installing Frontend dependencies ...',
       task: async (c, t) => {
         if (!c.fwExists) {
           // ---- NO FRAMEWORK
@@ -75,7 +93,7 @@ export async function installFw() {
             const ls = exec('cd public && npm i');
             ls.on('exit', code => {
               resolve(`child process exited with code ${code}`);
-              t.title = 'Dependencies installed';
+              t.title = 'Frontend dependencies installed';
             });
           });
         }
